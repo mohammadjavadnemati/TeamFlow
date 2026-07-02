@@ -1,0 +1,21 @@
+## .NET
+bin/
+obj/
+*.user
+*.suo
+.vs/
+*.swp
+ 
+## EF Migrations (optional - keep if you want)
+# src/TeamFlow.Infrastructure/Migrations/
+ 
+## Environment
+appsettings.Production.json
+.env
+ 
+## Docker
+docker-compose.override.yml
+ 
+## OS
+.DS_Store
+Thumbs.db

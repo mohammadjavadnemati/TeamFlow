@@ -1,0 +1,39 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: teamflow_api
+    ports:
+      - "5000:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=teamflow_db;Username=teamflow;Password=teamflow_pass
+      - JwtSettings__SecretKey=CHANGE_THIS_TO_A_VERY_LONG_SECRET_KEY_MIN_32_CHARS!!
+      - JwtSettings__Issuer=TeamFlow
+      - JwtSettings__Audience=TeamFlowUsers
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+ 
+  db:
+    image: postgres:17-alpine
+    container_name: teamflow_db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: teamflow_db
+      POSTGRES_USER: teamflow
+      POSTGRES_PASSWORD: teamflow_pass
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U teamflow -d teamflow_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+ 
+volumes:
+  postgres_data:
