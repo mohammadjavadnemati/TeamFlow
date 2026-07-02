@@ -7,9 +7,9 @@ using TeamFlow.Core.Interfaces;
 using TeamFlow.Infrastructure.Data;
 using TeamFlow.Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
- 
+
 namespace TeamFlow.Infrastructure;
- 
+
 public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(
@@ -19,7 +19,7 @@ public static class DependencyInjection
         // PostgreSQL + EF Core
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
- 
+
         // ASP.NET Identity
         services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
         {
@@ -32,14 +32,16 @@ public static class DependencyInjection
         })
         .AddEntityFrameworkStores<ApplicationDbContext>()
         .AddDefaultTokenProviders();
- 
+
         // JWT Settings
         services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
- 
+
         // Services
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IWorkspaceService, WorkspaceService>();
- 
+        services.AddScoped<IProjectService, ProjectService>();
+        services.AddScoped<ISprintService, SprintService>();
+
         return services;
     }
 }

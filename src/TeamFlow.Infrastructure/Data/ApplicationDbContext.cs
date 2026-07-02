@@ -12,6 +12,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
     public DbSet<Workspace> Workspaces => Set<Workspace>();
     public DbSet<WorkspaceMember> WorkspaceMembers => Set<WorkspaceMember>();
+    public DbSet<Project> Projects => Set<Project>();
+    public DbSet<Sprint> Sprints => Set<Sprint>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -64,5 +66,32 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
               .HasForeignKey(x => x.UserId)
               .OnDelete(DeleteBehavior.Cascade);
         });
+        builder.Entity<Project>(p =>
+            {
+                p.HasKey(x => x.Id);
+                p.Property(x => x.Name).HasMaxLength(100).IsRequired();
+                p.Property(x => x.Description).HasMaxLength(1000);
+                p.Property(x => x.Color).HasMaxLength(7).HasDefaultValue("#6366F1");
+                p.HasOne(x => x.Workspace)
+                .WithMany()
+                .HasForeignKey(x => x.WorkspaceId)
+                .OnDelete(DeleteBehavior.Cascade);
+                p.HasOne(x => x.CreatedBy)
+                .WithMany()
+                .HasForeignKey(x => x.CreatedById)
+                .OnDelete(DeleteBehavior.Restrict);
+            });
+
+        builder.Entity<Sprint>(s =>
+        {
+            s.HasKey(x => x.Id);
+            s.Property(x => x.Name).HasMaxLength(100).IsRequired();
+            s.Property(x => x.Goal).HasMaxLength(500);
+            s.HasOne(x => x.Project)
+             .WithMany(x => x.Sprints)
+             .HasForeignKey(x => x.ProjectId)
+             .OnDelete(DeleteBehavior.Cascade);
+        });
+
     }
 }
