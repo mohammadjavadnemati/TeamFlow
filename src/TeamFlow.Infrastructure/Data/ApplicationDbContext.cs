@@ -22,6 +22,10 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
     public DbSet<ChecklistItem> ChecklistItems => Set<ChecklistItem>();
     public DbSet<TaskWatcher> TaskWatchers => Set<TaskWatcher>();
     public DbSet<TaskBookmark> TaskBookmarks => Set<TaskBookmark>();
+    public DbSet<Comment> Comments => Set<Comment>();
+    public DbSet<FileAttachment> FileAttachments => Set<FileAttachment>();
+    public DbSet<ActivityLog> ActivityLogs => Set<ActivityLog>();
+    public DbSet<Notification> Notifications => Set<Notification>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -110,7 +114,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
             t.HasOne(x => x.CreatedBy).WithMany().HasForeignKey(x => x.CreatedById).OnDelete(DeleteBehavior.Restrict);
             t.HasOne(x => x.Assignee).WithMany().HasForeignKey(x => x.AssigneeId).OnDelete(DeleteBehavior.SetNull);
         });
-        
+
 
         builder.Entity<Subtask>(s =>
         {
@@ -161,6 +165,43 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
             b.HasKey(x => new { x.TaskId, x.UserId });
             b.HasOne(x => x.User).WithMany().HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
 
+        });
+        builder.Entity<Comment>(c =>
+{
+    c.HasKey(x => x.Id);
+    c.Property(x => x.Content).HasMaxLength(2000).IsRequired();
+    c.HasOne(x => x.Task).WithMany().HasForeignKey(x => x.TaskId).OnDelete(DeleteBehavior.Cascade);
+    c.HasOne(x => x.User).WithMany().HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Restrict);
+});
+
+        builder.Entity<FileAttachment>(f =>
+        {
+            f.HasKey(x => x.Id);
+            f.Property(x => x.FileName).HasMaxLength(500).IsRequired();
+            f.Property(x => x.OriginalFileName).HasMaxLength(255).IsRequired();
+            f.Property(x => x.ContentType).HasMaxLength(100).IsRequired();
+            f.Property(x => x.BlobUrl).HasMaxLength(1000).IsRequired();
+            f.HasOne(x => x.Task).WithMany().HasForeignKey(x => x.TaskId).OnDelete(DeleteBehavior.Cascade);
+            f.HasOne(x => x.UploadedBy).WithMany().HasForeignKey(x => x.UploadedById).OnDelete(DeleteBehavior.Restrict);
+        });
+
+        builder.Entity<ActivityLog>(a =>
+        {
+            a.HasKey(x => x.Id);
+            a.Property(x => x.Description).HasMaxLength(500).IsRequired();
+            a.HasOne(x => x.Workspace).WithMany().HasForeignKey(x => x.WorkspaceId).OnDelete(DeleteBehavior.Cascade);
+            a.HasOne(x => x.User).WithMany().HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Restrict);
+            a.HasOne(x => x.Project).WithMany().HasForeignKey(x => x.ProjectId).OnDelete(DeleteBehavior.SetNull);
+            a.HasOne(x => x.Task).WithMany().HasForeignKey(x => x.TaskId).OnDelete(DeleteBehavior.SetNull);
+        });
+
+        builder.Entity<Notification>(n =>
+        {
+            n.HasKey(x => x.Id);
+            n.Property(x => x.Title).HasMaxLength(200).IsRequired();
+            n.Property(x => x.Message).HasMaxLength(500).IsRequired();
+            n.HasOne(x => x.User).WithMany().HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
+            n.HasOne(x => x.Task).WithMany().HasForeignKey(x => x.TaskId).OnDelete(DeleteBehavior.SetNull);
         });
 
     }

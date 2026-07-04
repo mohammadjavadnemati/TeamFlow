@@ -41,6 +41,10 @@ public static class DependencyInjection
         services.AddScoped<IProjectService, ProjectService>();
         services.AddScoped<ISprintService, SprintService>();
         services.AddScoped<ITaskService, TaskService>();
+        services.AddScoped<ICommentService, CommentService>();
+        services.AddScoped<IFileService, FileService>();
+        services.AddScoped<IActivityService, ActivityService>();
+        services.AddScoped<INotificationService, NotificationService>();
 
         return services;
     }
