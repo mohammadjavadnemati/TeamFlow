@@ -6,7 +6,6 @@ using TeamFlow.Core.Entities;
 using TeamFlow.Core.Interfaces;
 using TeamFlow.Infrastructure.Data;
 using TeamFlow.Infrastructure.Services;
-using Microsoft.AspNetCore.Identity;
 
 namespace TeamFlow.Infrastructure;
 
@@ -41,6 +40,7 @@ public static class DependencyInjection
         services.AddScoped<IWorkspaceService, WorkspaceService>();
         services.AddScoped<IProjectService, ProjectService>();
         services.AddScoped<ISprintService, SprintService>();
+        services.AddScoped<ITaskService, TaskService>();
 
         return services;
     }

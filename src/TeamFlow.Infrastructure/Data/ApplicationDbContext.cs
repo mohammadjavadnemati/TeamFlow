@@ -14,6 +14,14 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
     public DbSet<WorkspaceMember> WorkspaceMembers => Set<WorkspaceMember>();
     public DbSet<Project> Projects => Set<Project>();
     public DbSet<Sprint> Sprints => Set<Sprint>();
+    public DbSet<ProjectTask> Tasks => Set<ProjectTask>();
+    public DbSet<Subtask> Subtasks => Set<Subtask>();
+    public DbSet<Label> Labels => Set<Label>();
+    public DbSet<TaskLabel> TaskLabels => Set<TaskLabel>();
+    public DbSet<Checklist> Checklists => Set<Checklist>();
+    public DbSet<ChecklistItem> ChecklistItems => Set<ChecklistItem>();
+    public DbSet<TaskWatcher> TaskWatchers => Set<TaskWatcher>();
+    public DbSet<TaskBookmark> TaskBookmarks => Set<TaskBookmark>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -91,6 +99,68 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
              .WithMany(x => x.Sprints)
              .HasForeignKey(x => x.ProjectId)
              .OnDelete(DeleteBehavior.Cascade);
+        });
+        builder.Entity<ProjectTask>(t =>
+        {
+            t.HasKey(x => x.Id);
+            t.Property(x => x.Title).HasMaxLength(200).IsRequired();
+            t.Property(x => x.Description).HasMaxLength(2000);
+            t.HasOne(x => x.Project).WithMany().HasForeignKey(x => x.ProjectId).OnDelete(DeleteBehavior.Cascade);
+            t.HasOne(x => x.Sprint).WithMany().HasForeignKey(x => x.SprintId).OnDelete(DeleteBehavior.SetNull);
+            t.HasOne(x => x.CreatedBy).WithMany().HasForeignKey(x => x.CreatedById).OnDelete(DeleteBehavior.Restrict);
+            t.HasOne(x => x.Assignee).WithMany().HasForeignKey(x => x.AssigneeId).OnDelete(DeleteBehavior.SetNull);
+        });
+        
+
+        builder.Entity<Subtask>(s =>
+        {
+
+            s.HasOne(x => x.Task).WithMany(x => x.Subtasks).HasForeignKey(x => x.TaskId).OnDelete(DeleteBehavior.Cascade);
+            s.HasKey(x => x.Id);
+            s.Property(x => x.Title).HasMaxLength(200).IsRequired();
+            s.HasOne(x => x.Assignee).WithMany().HasForeignKey(x => x.AssigneeId).OnDelete(DeleteBehavior.SetNull);
+        });
+        builder.Entity<Label>(l =>
+        {
+            l.HasKey(x => x.Id);
+            l.Property(x => x.Name).HasMaxLength(50).IsRequired();
+            l.Property(x => x.Color).HasMaxLength(7);
+            l.HasOne(x => x.Workspace).WithMany().HasForeignKey(x => x.WorkspaceId).OnDelete(DeleteBehavior.Cascade);
+        });
+
+        builder.Entity<TaskLabel>(tl =>
+        {
+            tl.HasOne(x => x.Task).WithMany(x => x.TaskLabels).HasForeignKey(x => x.TaskId).OnDelete(DeleteBehavior.Cascade);
+            tl.HasKey(x => new { x.TaskId, x.LabelId });
+            tl.HasOne(x => x.Label).WithMany(x => x.TaskLabels).HasForeignKey(x => x.LabelId).OnDelete(DeleteBehavior.Cascade);
+        });
+        builder.Entity<Checklist>(c =>
+        {
+            c.HasKey(x => x.Id);
+            c.Property(x => x.Title).HasMaxLength(100).IsRequired();
+            c.HasOne(x => x.Task).WithMany(x => x.Checklists).HasForeignKey(x => x.TaskId).OnDelete(DeleteBehavior.Cascade);
+        });
+        builder.Entity<ChecklistItem>(i =>
+        {
+            i.HasKey(x => x.Id);
+            i.Property(x => x.Title).HasMaxLength(200).IsRequired();
+            i.HasOne(x => x.Checklist).WithMany(x => x.Items).HasForeignKey(x => x.ChecklistId).OnDelete(DeleteBehavior.Cascade);
+        });
+
+        builder.Entity<TaskWatcher>(w =>
+        {
+            w.HasOne(x => x.Task).WithMany(x => x.Watchers).HasForeignKey(x => x.TaskId).OnDelete(DeleteBehavior.Cascade);
+            w.HasKey(x => new { x.TaskId, x.UserId });
+            w.HasOne(x => x.User).WithMany().HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
+
+        });
+
+        builder.Entity<TaskBookmark>(b =>
+        {
+            b.HasOne(x => x.Task).WithMany(x => x.Bookmarks).HasForeignKey(x => x.TaskId).OnDelete(DeleteBehavior.Cascade);
+            b.HasKey(x => new { x.TaskId, x.UserId });
+            b.HasOne(x => x.User).WithMany().HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
+
         });
 
     }
