@@ -4,4 +4,7 @@
     <Project Path="src/TeamFlow.Core/TeamFlow.Core.csproj" />
     <Project Path="src/TeamFlow.Infrastructure/TeamFlow.Infrastructure.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/TeamFlow.Tests/TeamFlow.Tests.csproj" />
+  </Folder>
 </Solution>

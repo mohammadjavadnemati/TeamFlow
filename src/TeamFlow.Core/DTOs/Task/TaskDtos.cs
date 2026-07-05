@@ -178,3 +178,6 @@ public record TaskFilterRequest(
     DateTime? DeadlineTo = null,
     string? Search = null
 );
+public record AssignTaskRequest(
+    Guid? AssigneeId = null  // null = unassign
+);

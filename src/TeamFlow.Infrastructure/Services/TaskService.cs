@@ -14,10 +14,17 @@ public class TaskService : ITaskService
     private readonly ApplicationDbContext _context;
     private readonly IWorkspaceService _workspaceService;
 
-    public TaskService(ApplicationDbContext context, IWorkspaceService workspaceService)
+    private readonly INotificationService _notificationService;
+    
+
+    public TaskService(
+        ApplicationDbContext context,
+        IWorkspaceService workspaceService,
+        INotificationService notificationService)
     {
         _context = context;
         _workspaceService = workspaceService;
+        _notificationService = notificationService;
     }
 
     // ─── Task CRUD ────────────────────────────────────────────────────────────
@@ -496,4 +503,42 @@ public class TaskService : ITaskService
         s.Id, s.Title, s.IsCompleted, s.CompletedAt,
         s.Assignee is null ? null : new AssigneeDto(s.Assignee.Id, s.Assignee.FirstName, s.Assignee.LastName, s.Assignee.Email!, s.Assignee.AvatarUrl)
     );
+    public async Task AssignAsync(Guid workspaceId, Guid projectId, Guid taskId, Guid requesterId, AssignTaskRequest request)
+    {
+        await EnsureMemberAsync(workspaceId, requesterId);
+
+        var task = await _context.Tasks
+            .FirstOrDefaultAsync(t => t.Id == taskId && t.ProjectId == projectId)
+            ?? throw new KeyNotFoundException("Task یافت نشد.");
+
+        // چک کن assignee عضو workspace باشه
+        if (request.AssigneeId.HasValue)
+        {
+            var isMember = await _context.WorkspaceMembers
+                .AnyAsync(m => m.WorkspaceId == workspaceId && m.UserId == request.AssigneeId);
+
+            if (!isMember)
+                throw new InvalidOperationException("کاربر مورد نظر عضو این Workspace نیست.");
+        }
+
+        var previousAssigneeId = task.AssigneeId;
+        task.AssigneeId = request.AssigneeId;
+        task.UpdatedAt = DateTime.UtcNow;
+
+        await _context.SaveChangesAsync();
+
+        // Notification به assignee جدید
+        if (request.AssigneeId.HasValue && request.AssigneeId != previousAssigneeId)
+        {
+            await _context.Entry(task).Reference(t => t.Project).LoadAsync();
+
+            await _notificationService.CreateAsync(
+                request.AssigneeId.Value,
+                NotificationType.TaskAssigned,
+                "Task جدید به شما اختصاص یافت",
+                $"Task '{task.Title}' در پروژه '{task.Project.Name}' به شما اختصاص داده شد.",
+                taskId
+            );
+        }
+    }
 }

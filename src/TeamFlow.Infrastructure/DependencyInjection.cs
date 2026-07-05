@@ -49,6 +49,8 @@ public static class DependencyInjection
         services.AddScoped<IAnalyticsService, AnalyticsService>();
         services.AddScoped<IReportService, ReportService>();
         services.AddScoped<ICalendarService, CalendarService>();
+        services.AddScoped<ISmartService, SmartService>();
+        services.AddScoped<ITaskService, TaskService>();
 
         return services;
     }

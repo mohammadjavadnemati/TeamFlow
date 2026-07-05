@@ -144,4 +144,13 @@ public class TasksController : ControllerBase
         await _taskService.UnbookmarkAsync(workspaceId, projectId, id, CurrentUserId);
         return Ok(ApiResponse.Ok("Task از ذخیره‌شده‌ها حذف شد."));
     }
+    /// <summary>اختصاص Task به عضو</summary>
+    [HttpPatch("{id:guid}/assign")]
+    public async Task<IActionResult> Assign(Guid workspaceId, Guid projectId, Guid id, [FromBody] AssignTaskRequest request)
+    {
+        await _taskService.AssignAsync(workspaceId, projectId, id, CurrentUserId, request);
+        return Ok(ApiResponse.Ok(
+            request.AssigneeId.HasValue ? "Task با موفقیت اختصاص یافت." : "Task از حالت اختصاص خارج شد."
+        ));
+    }
 }

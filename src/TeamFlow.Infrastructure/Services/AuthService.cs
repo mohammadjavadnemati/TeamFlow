@@ -75,18 +75,28 @@ public class AuthService : IAuthService
         if (token is null || !token.IsActive)
             throw new UnauthorizedAccessException("Refresh token نامعتبر یا منقضی شده است.");
 
-        // Rotate refresh token
-        var newRefreshToken = GenerateRefreshToken();
+        var user = token.User;
+
+        // Revoke token قدیمی
         token.IsRevoked = true;
         token.RevokedAt = DateTime.UtcNow;
-        token.ReplacedByToken = newRefreshToken.Token;
         token.RevokedReason = "Replaced by new token";
 
-        token.User.RefreshTokens.Add(newRefreshToken);
+        // ساخت token جدید
+        var newRefreshToken = GenerateRefreshToken();
+        token.ReplacedByToken = newRefreshToken.Token;
+        newRefreshToken.UserId = user.Id;
+
+        // اضافه کردن token جدید مستقیم به context بدون navigation property
+        _context.RefreshTokens.Add(newRefreshToken);
+
+        // فقط token قدیمی رو update کن
+        _context.RefreshTokens.Update(token);
+
         await _context.SaveChangesAsync();
 
-        var accessToken = GenerateAccessToken(token.User);
-        return BuildAuthResponse(accessToken, newRefreshToken, token.User);
+        var accessToken = GenerateAccessToken(user);
+        return BuildAuthResponse(accessToken, newRefreshToken, user);
     }
 
     public async Task RevokeTokenAsync(string refreshToken)

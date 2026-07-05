@@ -8,32 +8,34 @@ services:
       - "5000:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=teamflow_db;Username=teamflow;Password=teamflow_pass
-      - JwtSettings__SecretKey=CHANGE_THIS_TO_A_VERY_LONG_SECRET_KEY_MIN_32_CHARS!!
-      - JwtSettings__Issuer=TeamFlow
-      - JwtSettings__Audience=TeamFlowUsers
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
+      - JwtSettings__SecretKey=${JWT_SECRET_KEY}
+      - JwtSettings__Issuer=${JWT_ISSUER}
+      - JwtSettings__Audience=${JWT_AUDIENCE}
+      - AzureStorage__ConnectionString=${AZURE_STORAGE_CONNECTION_STRING}
+      - AzureStorage__ContainerName=${AZURE_STORAGE_CONTAINER_NAME}
     depends_on:
       db:
         condition: service_healthy
     restart: unless-stopped
- 
+
   db:
     image: postgres:17-alpine
     container_name: teamflow_db
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_DB: teamflow_db
-      POSTGRES_USER: teamflow
-      POSTGRES_PASSWORD: teamflow_pass
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U teamflow -d teamflow_db"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 5s
-      timeout: 5s
+        timeout: 5s
       retries: 5
     restart: unless-stopped
- 
+
 volumes:
   postgres_data:

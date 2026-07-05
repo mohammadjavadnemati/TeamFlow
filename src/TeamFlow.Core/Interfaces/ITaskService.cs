@@ -29,4 +29,5 @@ public interface ITaskService
     Task BookmarkAsync(Guid workspaceId, Guid projectId, Guid taskId, Guid userId);
     Task UnbookmarkAsync(Guid workspaceId, Guid projectId, Guid taskId, Guid userId);
     Task<IEnumerable<TaskDto>> GetBookmarksAsync(Guid workspaceId, Guid userId);
+    Task AssignAsync(Guid workspaceId, Guid projectId, Guid taskId, Guid requesterId, AssignTaskRequest request);
 }

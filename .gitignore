@@ -1,21 +1,57 @@
-## .NET
+# Build outputs
 bin/
 obj/
+out/
+
+# Visual Studio
+.vs/
 *.user
 *.suo
-.vs/
+*.userosscache
+*.sln.docstates
+*.rsuser
+
+# Rider
+.idea/
+
+# VS Code
+.vscode/
+!.vscode/extensions.json
+
+# .NET
 *.swp
- 
-## EF Migrations (optional - keep if you want)
-# src/TeamFlow.Infrastructure/Migrations/
- 
-## Environment
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Environment & Secrets
 appsettings.Production.json
+appsettings.Local.json
 .env
- 
-## Docker
+.env.*
+!.env.example
+
+# Docker override
 docker-compose.override.yml
- 
-## OS
+
+# src/TeamFlow.Infrastructure/Migrations/
+
+# Test results
+TestResults/
+coverage/
+*.coverage
+*.coveragexml
+
+# OS
 .DS_Store
 Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+logs/
+
+# NuGet
+*.nupkg
+.nuget/
+packages/
