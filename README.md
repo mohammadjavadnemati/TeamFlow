@@ -85,7 +85,7 @@ TeamFlow/
 ### Run with Docker
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/TeamFlow.git
+git clone https://github.com/mohammadjavadnemati/TeamFlow.git
 cd TeamFlow
 docker-compose up --build
 ```
@@ -176,6 +176,17 @@ Full API documentation available at `/swagger` when running.
 | Manage Sprints | ✅ | ✅ | ✅ | ❌ | ❌ |
 | Create Tasks | ✅ | ✅ | ✅ | ✅ | ❌ |
 | View Everything | ✅ | ✅ | ✅ | ✅ | ✅ |
+
+---
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the project
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'feat: add AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
 ---
 
