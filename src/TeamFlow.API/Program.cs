@@ -23,10 +23,9 @@ builder.Services.AddCors(options =>
 // ─── App ──────────────────────────────────────────────────────────────────────
 var app = builder.Build();
  
-// Auto-migrate on startup (dev only)
-if (app.Environment.IsDevelopment())
+// Auto-migrate on startup (در هر محیطی اجرا می‌شه، چون روی Render هم به Migration نیاز داریم)
+using (var scope = app.Services.CreateScope())
 {
-    using var scope = app.Services.CreateScope();
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     await db.Database.MigrateAsync();
 }
@@ -45,5 +44,7 @@ app.UseAuthentication();
 app.UseAuthorization();
  
 app.MapControllers();
+app.UseDefaultFiles(); // اجازه می‌ده index.html به‌صورت خودکار سرو بشه
+app.UseStaticFiles();
  
 app.Run();

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TeamFlow — ورود</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<section id="auth-screen">
+
+  <div class="auth-visual">
+    <div class="top-row">
+      <div class="logo-mark">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M4 12L10 18L20 6" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <span class="brand-name">TeamFlow</span>
+    </div>
+
+    <div class="pitch">
+      <div class="eyebrow">مدیریت پروژه هوشمند</div>
+      <h1>کارها رو جریان بنداز، نه گم‌شون کن.</h1>
+      <p>اسپرینت‌ها، تسک‌ها و تیمت رو در یک فضای رنگی و شفاف مدیریت کن — با هشدار بار کاری و ریسک ددلاین که خودشون بهت خبر می‌دن.</p>
+    </div>
+
+    <div class="card-stack" aria-hidden="true">
+      <div class="orbit-dot" style="width:90px;height:90px;background:var(--punch);top:0;left:0;"></div>
+      <div class="orbit-dot" style="width:60px;height:60px;background:var(--sun);bottom:40px;right:20px;"></div>
+
+      <div class="float-card fc1">
+        <div class="fc-top">
+          <span class="fc-tag" style="background:var(--mint-tint);color:#00806E;">Sprint</span>
+          <span style="color:#B4B2C6;font-size:11px;">#TF-284</span>
+        </div>
+        <div class="fc-title">طراحی فلوی آنبوردینگ کاربر جدید</div>
+        <div class="fc-bottom">
+          <div class="fc-avatars"><span style="background:var(--violet)">آ</span><span style="background:var(--punch)">م</span></div>
+          <span style="font-size:11px;color:#B4B2C6;">۳ روز مانده</span>
+        </div>
+      </div>
+
+      <div class="float-card fc2">
+        <div class="fc-top">
+          <span class="fc-tag" style="background:var(--punch-tint);color:#C24B2E;">فوری</span>
+          <span style="color:#B4B2C6;font-size:11px;">#TF-291</span>
+        </div>
+        <div class="fc-title">رفع باگ آپلود فایل</div>
+        <div class="fc-bar"><i style="width:70%;background:var(--punch);"></i></div>
+      </div>
+
+      <div class="float-card fc3">
+        <div class="fc-top">
+          <span class="fc-tag" style="background:var(--sun-tint);color:#8A6A12;">در حال بررسی</span>
+          <span style="color:#B4B2C6;font-size:11px;">#TF-276</span>
+        </div>
+        <div class="fc-title">تحلیل نمودار برن‌داون هفته سوم</div>
+        <div class="fc-bottom">
+          <div class="fc-avatars"><span style="background:var(--mint)">س</span></div>
+          <span style="font-size:11px;color:#B4B2C6;">امروز</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="auth-form-side">
+    <div class="auth-form-wrap">
+
+      <div class="mobile-brand">
+        <div class="logo-mark"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12L10 18L20 6" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span class="brand-name">TeamFlow</span>
+      </div>
+
+      <!-- LOGIN FORM -->
+      <form id="login-form" novalidate>
+        <h2>خوش برگشتی 👋</h2>
+        <p class="sub">وارد شو تا ببینی تیمت امروز چه‌کار کرده.</p>
+
+        <div class="field">
+          <label for="li-email">ایمیل</label>
+          <input type="email" id="li-email" placeholder="you@company.com" required autocomplete="email">
+        </div>
+        <div class="field">
+          <label for="li-pass">رمز عبور</label>
+          <input type="password" id="li-pass" placeholder="••••••••" required autocomplete="current-password">
+        </div>
+
+        <div id="login-banner" class="form-banner error"></div>
+
+        <button type="submit" class="btn-primary" id="login-submit">
+          <span class="btn-label">ورود به فضای کاری</span>
+          <svg viewBox="0 0 24 24" fill="none" width="15" height="15"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+
+        <div class="divider">یا</div>
+
+        <div class="switch-line">
+          حساب نداری؟ <button type="button" onclick="showForm('signup')">بساز، ۳۰ ثانیه‌ست</button>
+        </div>
+      </form>
+
+      <!-- SIGNUP FORM -->
+      <form id="signup-form" style="display:none;" novalidate>
+        <h2>فضای کاری جدید بساز</h2>
+        <p class="sub">اول از همه، خودت رو معرفی کن.</p>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="su-first">نام</label>
+            <input type="text" id="su-first" placeholder="سارا" required>
+          </div>
+          <div class="field">
+            <label for="su-last">نام خانوادگی</label>
+            <input type="text" id="su-last" placeholder="احمدی" required>
+          </div>
+        </div>
+        <div class="field">
+          <label for="su-email">ایمیل کاری</label>
+          <input type="email" id="su-email" placeholder="you@company.com" required autocomplete="email">
+        </div>
+        <div class="field">
+          <label for="su-pass">رمز عبور</label>
+          <input type="password" id="su-pass" placeholder="حداقل ۶ کاراکتر" required minlength="6" autocomplete="new-password">
+        </div>
+
+        <div id="signup-banner" class="form-banner error"></div>
+
+        <button type="submit" class="btn-primary punch" id="signup-submit">
+          <span class="btn-label">شروع کن، رایگانه</span>
+        </button>
+
+        <div class="switch-line">
+          قبلاً حساب ساختی؟ <button type="button" onclick="showForm('login')">وارد شو</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</section>
+
+<div id="toast" class="toast"></div>
+
+<script src="js/config.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+</body>
+</html>
